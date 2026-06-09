@@ -1,6 +1,7 @@
-#include <iostream>
+#include "Interface.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Interface interface;
+    interface.run();
     return 0;
 }

@@ -22,7 +22,8 @@ void HashTableOpenAddressing::resize() {
     HashEntry* oldTable = table;
 
     capacity = capacity * 2;
-    table = new HashEntry[capacity];
+    table = new HashEntry[capacity]
+    ;
     size = 0;
 
     for (int i = 0; i < oldCapacity; i++) {

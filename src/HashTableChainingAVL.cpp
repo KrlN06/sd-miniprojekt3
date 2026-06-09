@@ -3,7 +3,8 @@
 #include <stdexcept>
 
 HashTableChainingAVL::HashTableChainingAVL(int initialCapacity) {
-    
+
+    // Initialize hash table capacity and allocate bucket array
     capacity = initialCapacity;
     table = new AVLNode*[capacity];
 
@@ -14,15 +15,18 @@ HashTableChainingAVL::HashTableChainingAVL(int initialCapacity) {
 
 HashTableChainingAVL::~HashTableChainingAVL() {
 
+    // Destroy all AVL trees stored in hash table buckets
     for (int i = 0; i < capacity; i++) {
         destroyTree(table[i]);
     }
 
+    // Release bucket array memory
     delete[] table;
 }
 
 void HashTableChainingAVL::destroyTree(AVLNode* node) {
 
+    // Post-order traversal to safely delete all nodes
     if (node != nullptr) {
         destroyTree(node->left);
         destroyTree(node->right);
@@ -31,6 +35,7 @@ void HashTableChainingAVL::destroyTree(AVLNode* node) {
 }
 
 int HashTableChainingAVL::hash(int key) const {
+    // Map key to a bucket index
     return std::abs(key) % capacity;
 }
 
@@ -45,6 +50,7 @@ int HashTableChainingAVL::height(AVLNode* node) {
 
 int HashTableChainingAVL::getBalance(AVLNode* node) {
 
+    // Balance factor = left subtree height - right subtree height
     if (node == nullptr) {
         return 0;
     }
@@ -54,6 +60,7 @@ int HashTableChainingAVL::getBalance(AVLNode* node) {
 
 AVLNode* HashTableChainingAVL::rightRotate(AVLNode* y) {
 
+    // Perform right rotation to restore AVL balance
     AVLNode* x = y->left;
     AVLNode* T2 = x->right;
 
@@ -68,6 +75,7 @@ AVLNode* HashTableChainingAVL::rightRotate(AVLNode* y) {
 
 AVLNode* HashTableChainingAVL::leftRotate(AVLNode* x) {
 
+    // Perform left rotation to restore AVL balance
     AVLNode* y = x->right;
     AVLNode* T2 = y->left;
 
@@ -82,6 +90,7 @@ AVLNode* HashTableChainingAVL::leftRotate(AVLNode* x) {
 
 AVLNode* HashTableChainingAVL::minValueNode(AVLNode* node) {
 
+    // Find the leftmost (smallest) node in the subtree
     AVLNode* current = node;
 
     while (current->left != nullptr) {
@@ -93,25 +102,29 @@ AVLNode* HashTableChainingAVL::minValueNode(AVLNode* node) {
 
 AVLNode* HashTableChainingAVL::insertAVL(AVLNode* node, int key, int value) {
 
+    // Standard BST insertion
     if (node == nullptr) {
         return new AVLNode(key, value);
     }
 
     if (key < node->key) {
         node->left = insertAVL(node->left, key, value);
-    } 
+    }
     else if (key > node->key) {
         node->right = insertAVL(node->right, key, value);
-    } 
+    }
     else {
         node->value = value;
         return node;
     }
 
+    // Update node height after insertion
     node->height = 1 + std::max(height(node->left), height(node->right));
 
+    // Check whether rebalancing is required
     int balance = getBalance(node);
 
+    // AVL rotation cases: LL, RR, LR, RL
     if (balance > 1 && key < node->left->key) {
         return rightRotate(node);
     }
@@ -134,32 +147,34 @@ AVLNode* HashTableChainingAVL::insertAVL(AVLNode* node, int key, int value) {
 }
 
 void HashTableChainingAVL::insert(int key, int value) {
+    // Compute bucket index and insert into corresponding AVL tree
     int index = hash(key);
     table[index] = insertAVL(table[index], key, value);
 }
 
 AVLNode* HashTableChainingAVL::removeAVL(AVLNode* node, int key, bool& isRemoved) {
 
+    // Standard BST deletion
     if (node == nullptr) {
         return node;
     }
 
     if (key < node->key) {
         node->left = removeAVL(node->left, key, isRemoved);
-    } 
+    }
     else if (key > node->key) {
         node->right = removeAVL(node->right, key, isRemoved);
-    } 
+    }
     else {
         isRemoved = true;
 
         if (node->left == nullptr || node->right == nullptr) {
-            
+
             AVLNode* temp = nullptr;
 
             if (node->left != nullptr) {
                 temp = node->left;
-            } 
+            }
             else {
                 temp = node->right;
             }
@@ -167,20 +182,20 @@ AVLNode* HashTableChainingAVL::removeAVL(AVLNode* node, int key, bool& isRemoved
             if (temp == nullptr) {
                 temp = node;
                 node = nullptr;
-            } 
+            }
             else {
-                *node = *temp; 
+                *node = *temp;
             }
 
             delete temp;
-        } 
+        }
         else {
-            
+            // Replace with inorder successor when node has two children
             AVLNode* temp = minValueNode(node->right);
-            
+
             node->key = temp->key;
             node->value = temp->value;
-            
+
             node->right = removeAVL(node->right, temp->key, isRemoved);
         }
     }
@@ -189,6 +204,7 @@ AVLNode* HashTableChainingAVL::removeAVL(AVLNode* node, int key, bool& isRemoved
         return node;
     }
 
+    // Update height and rebalance after deletion
     node->height = 1 + std::max(height(node->left), height(node->right));
 
     int balance = getBalance(node);
@@ -216,6 +232,7 @@ AVLNode* HashTableChainingAVL::removeAVL(AVLNode* node, int key, bool& isRemoved
 
 void HashTableChainingAVL::remove(int key) {
 
+    // Locate bucket and remove key from its AVL tree
     int index = hash(key);
     bool isRemoved = false;
     
