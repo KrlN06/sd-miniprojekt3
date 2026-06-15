@@ -36,9 +36,12 @@ private:
     AVLNode* insertAVL(AVLNode* node, int key, int value);
     AVLNode* removeAVL(AVLNode* node, int key, bool& isRemoved);
     void destroyTree(AVLNode* node);
+    AVLNode* copyTree(AVLNode* node);
 
 public:
     HashTableChainingAVL(int initialCapacity = 16);
+    HashTableChainingAVL(const HashTableChainingAVL& other);
+    HashTableChainingAVL& operator=(const HashTableChainingAVL& other);
     ~HashTableChainingAVL();
 
     void insert(int key, int value);

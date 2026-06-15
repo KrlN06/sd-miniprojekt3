@@ -24,6 +24,8 @@ private:
 
 public:
     HashTableChainingList(int initialCapacity = 16);
+    HashTableChainingList(const HashTableChainingList& other);
+    HashTableChainingList& operator=(const HashTableChainingList& other);
     ~HashTableChainingList();
 
     void insert(int key, int value);

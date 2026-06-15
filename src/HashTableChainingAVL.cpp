@@ -13,6 +13,53 @@ HashTableChainingAVL::HashTableChainingAVL(int initialCapacity) {
     }
 }
 
+AVLNode* HashTableChainingAVL::copyTree(AVLNode* node) {
+
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    AVLNode* newNode = new AVLNode(node->key, node->value);
+    newNode->height = node->height;
+
+    newNode->left = copyTree(node->left);
+    newNode->right = copyTree(node->right);
+
+    return newNode;
+}
+
+HashTableChainingAVL::HashTableChainingAVL(const HashTableChainingAVL& other) {
+
+    capacity = other.capacity;
+    table = new AVLNode*[capacity];
+
+    for (int i = 0; i < capacity; i++) {
+        table[i] = copyTree(other.table[i]);
+    }
+}
+
+HashTableChainingAVL& HashTableChainingAVL::operator=(const HashTableChainingAVL& other) {
+
+    if (this == &other) {
+        return *this;
+    }
+
+    for (int i = 0; i < capacity; i++) {
+        destroyTree(table[i]);
+    }
+
+    delete[] table;
+
+    capacity = other.capacity;
+    table = new AVLNode*[capacity];
+
+    for (int i = 0; i < capacity; i++) {
+        table[i] = copyTree(other.table[i]);
+    }
+
+    return *this;
+}
+
 HashTableChainingAVL::~HashTableChainingAVL() {
 
     // Destroy all AVL trees stored in hash table buckets

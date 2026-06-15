@@ -32,6 +32,8 @@ private:
 
 public:
     HashTableOpenAddressing(int initialCapacity = 16);
+    HashTableOpenAddressing(const HashTableOpenAddressing& other);
+    HashTableOpenAddressing& operator=(const HashTableOpenAddressing& other);
     ~HashTableOpenAddressing();
 
     void insert(int key, int value);

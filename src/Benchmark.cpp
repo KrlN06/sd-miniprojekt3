@@ -104,7 +104,7 @@ void Benchmark::benchmarkAvl(const HashTableChainingAVL& originalTable, const Dy
         long long totalTime = 0;
         for (int i = 0; i < repetitions; i++) {
             HashTableChainingAVL table = originalTable;
-            int key = Random::generateRandomInt(0, 99999);
+            int key = 1000000 + i;
             int value = key;
             timer.start();
             table.insert(key, value);
@@ -146,7 +146,7 @@ void Benchmark::benchmarkList(const HashTableChainingList& originalTable, const 
         long long totalTime = 0;
         for (int i = 0; i < repetitions; i++) {
             HashTableChainingList table = originalTable;
-            int key = Random::generateRandomInt(0, 99999);
+            int key = 1000000 + i;
             int value = key;
             timer.start();
             table.insert(key, value);
@@ -188,7 +188,7 @@ void Benchmark::benchmarkOpen(const HashTableOpenAddressing& originalTable, cons
         long long totalTime = 0;
         for (int i = 0; i < repetitions; i++) {
             HashTableOpenAddressing table = originalTable;
-            int key = Random::generateRandomInt(0, 99999);
+            int key = 1000000 + i;
             int value = key;
             timer.start();
             table.insert(key, value);

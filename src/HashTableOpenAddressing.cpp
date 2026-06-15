@@ -2,10 +2,42 @@
 #include <cmath>
 #include <stdexcept>
 
+
 HashTableOpenAddressing::HashTableOpenAddressing(int initialCapacity) {
     capacity = initialCapacity;
     size = 0;
     table = new HashEntry[capacity];
+}
+
+HashTableOpenAddressing::HashTableOpenAddressing(const HashTableOpenAddressing& other) {
+    capacity = other.capacity;
+    size = other.size;
+
+    table = new HashEntry[capacity];
+
+    for (int i = 0; i < capacity; i++) {
+        table[i] = other.table[i];
+    }
+}
+
+HashTableOpenAddressing& HashTableOpenAddressing::operator=(const HashTableOpenAddressing& other) {
+
+    if (this == &other) {
+        return *this;
+    }
+
+    delete[] table;
+
+    capacity = other.capacity;
+    size = other.size;
+
+    table = new HashEntry[capacity];
+
+    for (int i = 0; i < capacity; i++) {
+        table[i] = other.table[i];
+    }
+
+    return *this;
 }
 
 HashTableOpenAddressing::~HashTableOpenAddressing() {
